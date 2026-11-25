@@ -40,7 +40,21 @@
    "blend": "normal",
    "role": "texte",
    "fx": [],
-   "suit": null
+   "suit": null,
+   "zones": [
+    [
+     2920,
+     1410,
+     618,
+     300
+    ],
+    [
+     3280,
+     1974,
+     438,
+     36
+    ]
+   ]
   },
   {
    "id": "bloc",

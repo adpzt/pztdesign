@@ -35,7 +35,7 @@ img { display: block; }
 /* ---------- un bloc = une slide, pleine largeur, même ratio que l'export ---------- */
 /* dézoom : chaque slide occupe 70 % de la largeur, centrée ; les calques
    exportés en entier débordent dans la marge blanche */
-:root { --largeur-slide: 85vw; }
+:root { --largeur-slide: 94vw; }
 .slide {
   position: relative;
   width: var(--largeur-slide);
@@ -318,3 +318,19 @@ html.pop-ouvert .contact { opacity: 0; pointer-events: none; }
 /* téléphone : pas de bulle d'aide sur la fin */
 html.sur-fin .astuce { opacity: 0 !important; }
 @media (max-width: 767px) { .fin__lieu { display: block; } .fin__sep { display: none; } }
+
+/* ---------- parallaxe : calques prêts à bouger seulement près de l'écran ; profondeur à la souris ---------- */
+.slide.is-proche .plan--bouge { will-change: transform; }
+@media (hover: hover) and (pointer: fine) {
+  .plan--bouge { translate: calc(var(--mx, 0) * var(--md, 0) * -1px) calc(var(--my, 0) * var(--md, 0) * -0.6px); }
+}
+
+/* ---------- arrivée : étoile qui tourne au centre puis se pose sur la couverture ---------- */
+.intro-etoile {
+  position: fixed; z-index: 80; pointer-events: none;
+  width: min(20vw, 28vh); aspect-ratio: 1;
+  left: calc(50vw - min(10vw, 14vh)); top: calc(50vh - min(10vw, 14vh));
+  will-change: transform;
+}
+.intro-etoile svg { display: block; width: 100%; height: 100%; fill: var(--pzt); }
+html.en-intro .contact, html.en-intro .astuce { opacity: 0 !important; }

@@ -14,7 +14,21 @@
    "blend": "normal",
    "role": "texte",
    "fx": [],
-   "suit": null
+   "suit": null,
+   "zones": [
+    [
+     94,
+     1419,
+     1164,
+     234
+    ],
+    [
+     94,
+     1743,
+     1164,
+     282
+    ]
+   ]
   },
   {
    "id": "titre",

@@ -7,6 +7,24 @@
   const reduit = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const pct = (v, total) => (v / total * 100) + "%";
 
+  // ---------- vidéos en boucle ----------
+  // Lecture seulement à l'écran. Pendant que l'on défile, elles se mettent en pause : une vidéo qui tourne
+  // fait tomber Chrome / Safari à 30 images par seconde ; elles repartent dès que le défilement s'arrête.
+  const videosVues = new Set();
+  let enDefilement = false, minuterieDefile = 0;
+  function suivreVideo(v, bloc) {
+    new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { videosVues.add(v); if (!enDefilement) v.play().catch(() => {}); }
+      else { videosVues.delete(v); v.pause(); }
+    }, { rootMargin: "200px 0px" }).observe(bloc);
+  }
+  function signalerDefilement() {
+    if (!enDefilement) { enDefilement = true; videosVues.forEach(v => v.pause()); }
+    clearTimeout(minuterieDefile);
+    minuterieDefile = setTimeout(() => { enDefilement = false; videosVues.forEach(v => v.play().catch(() => {})); }, 160);
+  }
+  window.addEventListener("scroll", signalerDefilement, { passive: true });
+
   // ---------- construction ----------
   // les calques se chargent deux écrans avant d'arriver à l'écran
   const charger = img => {
@@ -22,7 +40,7 @@
     if (!chemin.endsWith(".webp")) return;
     img.dataset.f = f;
     img.dataset.srcset = `${chemin.replace(/\.webp$/, "_m.webp")} ${Math.round(w / 2)}w, ${chemin.replace(/\.webp$/, "_l.webp")} ${Math.round(w * 2 / 3)}w, ${chemin} ${w}w`;
-    img.dataset.sizes = `(max-width: 767px) ${(f * 100).toFixed(2)}vw, ${(f * 85).toFixed(2)}vw`;
+    img.dataset.sizes = `(max-width: 767px) ${(f * 100).toFixed(2)}vw, ${(f * 94).toFixed(2)}vw`;
   }
   function plan(p, m, dossier) {
     const el = document.createElement("div");
@@ -49,6 +67,79 @@
     return el;
   }
 
+  // piles où les visuels s'inclinent un peu en 3D au défilement (jamais de texte)
+  const INCLINAISON = {
+    hellobank: ["carrousel1", "carrousel2", "carrousel5"],
+    etatpur: ["post01", "post02", "post03"],
+  };
+
+  // ---------- parallaxe organisée ----------
+  // Les visuels qui se touchent bougent ensemble ; une légende bouge avec le visuel qu'elle accompagne
+  // (rien ne se masque, rien ne se décale dans une composition) ; les textes seuls restent fixes.
+  // Chaque groupe reçoit une seule profondeur (data-prof).
+  function organiser(s, m) {
+    const boite = (x, y, w, h) => ({ x0: x, y0: y, x1: x + w, y1: y + h });
+    const ecart = (a, b) => Math.hypot(Math.max(0, a.x0 - b.x1, b.x0 - a.x1), Math.max(0, a.y0 - b.y1, b.y0 - a.y1));
+    const noeuds = [];
+    s.querySelectorAll(":scope > .plan").forEach(el => {
+      const role = el.dataset.role;
+      if (role === "fond" || role === "etoile") return;
+      const p = m.planes.find(q => q.id === el.dataset.id);
+      if (role === "visuel" && p) noeuds.push({ el, type: "v", b: boite(p.x, p.y, p.w, p.h), d: +el.dataset.depth || 0 });
+      else if (role === "texte" && p) (p.zones || [[p.x, p.y, p.w, p.h]]).forEach(z => noeuds.push({ el, type: "z", b: boite(...z), p }));
+      else if (role === "texte") {
+        const t = (m.textes || []).find(t => t.id === el.dataset.id);
+        if (t) noeuds.push({ el, type: "z", b: boite(t.x, t.base - t.size, t.txt.length * t.size * 0.55, t.size * 1.25) });
+      }
+    });
+    const par = noeuds.map((_, i) => i);
+    const f = i => (par[i] === i ? i : (par[i] = f(par[i])));
+    const aire = b => (b.x1 - b.x0) * (b.y1 - b.y0);
+    const commun = (a, b) => Math.max(0, Math.min(a.x1, b.x1) - Math.max(a.x0, b.x0)) * Math.max(0, Math.min(a.y1, b.y1) - Math.max(a.y0, b.y0));
+    noeuds.forEach((a, i) => noeuds.forEach((b, j) => {
+      if (j <= i || (a.type === "z" && b.type === "z")) return;
+      if (a.type === "v" && b.type === "v") {
+        // posés bord à bord (bannière + portrait…) : verrouillés ; empilés (carrousel en éventail) : profondeurs libres
+        if (ecart(a.b, b.b) < 30 && commun(a.b, b.b) < 0.03 * Math.min(aire(a.b), aire(b.b))) par[f(i)] = f(j);
+      } else if (ecart(a.b, b.b) < 120) par[f(i)] = f(j);
+    }));
+    const groupes = new Map();
+    noeuds.forEach((n, i) => { const r = f(i); if (!groupes.has(r)) groupes.set(r, []); groupes.get(r).push(n); });
+    let g = 0;
+    groupes.forEach(liste => {
+      const vis = liste.filter(n => n.type === "v");
+      const avecTexte = liste.some(n => n.type === "z");
+      const prof = vis.length ? vis.reduce((a, n) => a + n.d, 0) / vis.length * (avecTexte ? 0.75 : 1) : 0;
+      liste.forEach(n => { n.g = g; n.prof = prof; });
+      g++;
+    });
+    noeuds.filter(n => n.type === "v").forEach(n => { n.el.dataset.groupe = n.g; n.el.dataset.prof = n.prof.toFixed(3); });
+    // un calque de texte dont les zones vont dans des groupes différents est dupliqué :
+    // chaque copie ne montre que ses zones (découpe) et suit son groupe
+    const pc = (v, t) => `${(Math.max(0, v) / t * 100).toFixed(3)}%`;
+    const parCalque = new Map();
+    noeuds.filter(n => n.type === "z").forEach(n => { if (!parCalque.has(n.el)) parCalque.set(n.el, []); parCalque.get(n.el).push(n); });
+    parCalque.forEach((zs, el) => {
+      const gs = [...new Set(zs.map(z => z.g))];
+      if (gs.length === 1 || !zs[0].p) { el.dataset.groupe = zs[0].g; el.dataset.prof = zs[0].prof.toFixed(3); return; }
+      const p = zs[0].p;
+      gs.forEach(gr => {
+        const mes = zs.filter(z => z.g === gr), M = 10;
+        const x0 = Math.min(...mes.map(z => z.b.x0)) - M, y0 = Math.min(...mes.map(z => z.b.y0)) - M;
+        const x1 = Math.max(...mes.map(z => z.b.x1)) + M, y1 = Math.max(...mes.map(z => z.b.y1)) + M;
+        const c = el.cloneNode(true);
+        c.style.clipPath = `inset(${pc(y0 - p.y, p.h)} ${pc(p.x + p.w - x1, p.w)} ${pc(p.y + p.h - y1, p.h)} ${pc(x0 - p.x, p.w)})`;
+        c.dataset.groupe = gr; c.dataset.prof = mes[0].prof.toFixed(3);
+        const img = c.querySelector("img");
+        if (img) prechargeur.observe(img);
+        el.before(c);
+      });
+      const img = el.querySelector("img");
+      if (img) prechargeur.unobserve(img);
+      el.remove();
+    });
+  }
+
   function slidePlans(b) {
     const m = b.manifest;
     const s = document.createElement("section");
@@ -60,11 +151,12 @@
     (m.textes || []).forEach(t => {
       const el = document.createElement("div");
       el.className = "plan plan--texte";
-      el.dataset.role = "texte"; el.dataset.depth = 0;
+      el.dataset.role = "texte"; el.dataset.depth = 0; el.dataset.id = t.id || "";
       el.style.left = pct(t.x, m.w); el.style.top = pct(t.base, m.h);
       el.innerHTML = `<span style="font-size:calc(${t.size} / ${m.w} * 100cqw);font-weight:${t.weight || 500}${t.color ? ";color:" + t.color : ""}">${t.txt}</span>`;
       s.appendChild(el);
     });
+    organiser(s, m);
     (m.liens || []).forEach(l => {
       const a = document.createElement("a");
       a.className = "lien";
@@ -111,6 +203,8 @@
     puce.className = "roles__puce";
     s.appendChild(puce);
     s._roles = { ul, puce, n: roles.length };
+    // la photo et le nom posé dessus forment un seul groupe (le nom ne glisse jamais sur la photo)
+    s.querySelectorAll(".plan[data-role='visuel'], .pres__nom").forEach(el => { el.classList.add("plan"); el.dataset.prof = "0.22"; el.dataset.groupe = "0"; });
     return s;
   }
 
@@ -129,9 +223,7 @@
     v.src = `assets/videos/${b.src}.mp4`;
     s.appendChild(v);
     // lecture seulement quand le bloc est à l'écran
-    new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) { v.play().catch(() => {}); } else { v.pause(); }
-    }, { rootMargin: "200px 0px" }).observe(s);
+    suivreVideo(v, s);
     return s;
   }
 
@@ -346,20 +438,30 @@
     }
     const H = () => s.getBoundingClientRect().height;
 
-    // Parallaxe : seuls les éléments de décor (formes de fond, étoiles) glissent.
-    // Les visuels et leurs textes restent calés comme dans le PSD (rien ne se masque).
-    // Apparition : tout le contenu de la slide monte ensemble, en vague de gauche à droite.
+    // Parallaxe : les décors (formes de fond, étoiles) glissent le plus ; les visuels glissent par groupes
+    // (une légende avec son visuel, des visuels qui se touchent ensemble) ; les textes seuls restent fixes.
+    // Tout est à sa place exacte du PSD quand la slide est au centre de l'écran.
+    // Apparition : chaque groupe monte d'autant plus qu'il est en avant, en vague de gauche à droite.
     const contenus = [];
     s.querySelectorAll(".plan").forEach(el => {
       const d = parseFloat(el.dataset.depth) || 0;
       const role = el.dataset.role;
       const decor = role === "fond" || role === "etoile";
       const img = el.firstElementChild;
-      if (decor && d !== 0) {
-        el.style.willChange = "transform";
-        const amp = () => (mobile.matches ? 0.12 : 0.26) * d * H();
+      const prof = decor ? d * 2 : parseFloat(el.dataset.prof || "0");
+      if (prof) {
+        el.classList.add("plan--bouge");
+        el.style.setProperty("--md", (Math.abs(prof) * (decor ? 30 : 24)).toFixed(1));
+        const amp = () => (mobile.matches ? 0.1 : 0.24) * prof * H();
         gsap.fromTo(el, { y: () => amp() }, {
           y: () => -amp(), ease: "none",
+          scrollTrigger: { trigger: s, start: "top bottom", end: "bottom top", scrub: true, invalidateOnRefresh: true },
+        });
+      }
+      const incl = (INCLINAISON[s.id] || []).includes(el.dataset.id);
+      if (incl && !mobile.matches) {
+        gsap.fromTo(el, { rotationY: -6, rotationX: 4, transformPerspective: 1200 }, {
+          rotationY: 6, rotationX: -4, ease: "none",
           scrollTrigger: { trigger: s, start: "top bottom", end: "bottom top", scrub: true, invalidateOnRefresh: true },
         });
       }
@@ -368,17 +470,80 @@
       }
       if (!decor) contenus.push(el);
     });
-    if (contenus.length) {
+    if (contenus.length && idx > 0) {
       const larg = s.offsetWidth || 1;
-      const imgs = contenus.map(el => el.firstElementChild);
-      const delais = contenus.map(el => Math.min(0.3, el.offsetLeft / larg * 0.3));
-      if (idx === 0) gsap.from(imgs, { opacity: 0, y: 30, duration: 1.1, ease: "power3.out", delay: i => 0.1 + delais[i] });
-      else gsap.from(imgs, {
-        opacity: 0, y: 36, duration: 1, ease: "power3.out", delay: i => delais[i],
+      const avecImg = contenus.filter(el => el.firstElementChild);
+      const imgs = avecImg.map(el => el.firstElementChild);
+      const delais = avecImg.map(el => Math.min(0.35, el.offsetLeft / larg * 0.35));
+      const profs = avecImg.map(el => parseFloat(el.dataset.prof || "0"));
+      gsap.from(imgs, {
+        opacity: 0, y: i => 30 + profs[i] * 110, scale: i => (profs[i] > 0.2 ? 0.965 : 1), duration: 1.15, ease: "power3.out", delay: i => delais[i],
         scrollTrigger: { trigger: s, start: "top 80%", toggleActions: "play none none reverse" },
       });
     }
+    // seules les slides proches de l'écran gardent leurs calques prêts à bouger (fluidité)
+    ScrollTrigger.create({ trigger: s, start: "top bottom+=40%", end: "bottom top-=40%", toggleClass: "is-proche" });
   });
+  // ---------- profondeur à la souris (ordinateur) : les groupes en avant suivent un peu le curseur ----------
+  if (!reduit && window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+    let cx = 0, cy = 0, tx = 0, ty = 0, actif = false;
+    const boucle = () => {
+      cx += (tx - cx) * 0.07; cy += (ty - cy) * 0.07;
+      document.querySelectorAll(".slide.is-proche").forEach(sl => { sl.style.setProperty("--mx", cx.toFixed(3)); sl.style.setProperty("--my", cy.toFixed(3)); });
+      if (Math.abs(tx - cx) + Math.abs(ty - cy) > 0.002) requestAnimationFrame(boucle); else actif = false;
+    };
+    window.addEventListener("pointermove", e => {
+      tx = e.clientX / innerWidth * 2 - 1; ty = e.clientY / innerHeight * 2 - 1;
+      if (!actif) { actif = true; requestAnimationFrame(boucle); }
+    }, { passive: true });
+  }
+
+  // ---------- arrivée : l'étoile tourne au centre, puis va se poser sur la couverture qui s'assemble ----------
+  (function intro() {
+    const couv = document.querySelector("#couverture");
+    const etoile = couv && couv.querySelector(".plan[data-role='etoile']");
+    if (!etoile || reduit || window.scrollY > 40) return;
+    const imgsPlans = [...couv.querySelectorAll(".plan")].map(el => el.firstElementChild).filter(Boolean);
+    const vol = document.createElement("div");
+    vol.className = "intro-etoile";
+    vol.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true"><use href="#etoile"/></svg>';
+    document.body.appendChild(vol);
+    document.documentElement.classList.add("en-intro");
+    gsap.set(imgsPlans, { opacity: 0 });
+    const suite = [...document.querySelectorAll("#page > .slide")].filter(sl => sl !== couv);
+    gsap.set(suite, { autoAlpha: 0 });
+    if (window.__lenis) window.__lenis.stop();
+    const tourne = gsap.to(vol, { rotation: "+=360", duration: 2.2, ease: "none", repeat: -1 });
+    const imgs = [...couv.querySelectorAll("img")];
+    imgs.forEach(img => { if (!img.getAttribute("src")) charger(img); });
+    const prets = Promise.all(imgs.map(i => i.decode().catch(() => {})));
+    const minimum = new Promise(r => setTimeout(r, 650));
+    Promise.race([Promise.all([prets, minimum]), new Promise(r => setTimeout(r, 2800))]).then(() => {
+      // centres par getBoundingClientRect (exact même en rotation), taille par offsetWidth (sans la rotation)
+      const cible = etoile.getBoundingClientRect(), v = vol.getBoundingClientRect(), taille = vol.offsetWidth;
+      const r0 = gsap.getProperty(vol, "rotation");
+      tourne.kill();
+      const fin = Math.ceil((r0 + 200) / 45) * 45; // finit sur un angle où l'étoile retombe sur elle-même
+      const role = el => el.parentElement.dataset.role;
+      const id = el => el.parentElement.dataset.id;
+      const cadre = imgsPlans.filter(i => ["carre", "grille", "caches"].includes(id(i)));
+      const textes = imgsPlans.filter(i => role(i) === "texte");
+      const etoileImg = etoile.firstElementChild;
+      gsap.timeline({ onComplete: () => {
+          vol.remove();
+          document.documentElement.classList.remove("en-intro");
+          if (window.__lenis) window.__lenis.start();
+        } })
+        .to(vol, { x: cible.left + cible.width / 2 - (v.left + v.width / 2), y: cible.top + cible.height / 2 - (v.top + v.height / 2),
+                   scale: etoile.offsetWidth / taille, rotation: fin, duration: 1.3, ease: "power3.inOut" }, 0)
+        .fromTo(cadre, { opacity: 0, scale: 0.9, y: 40 }, { opacity: 1, scale: 1, y: 0, duration: 1.1, ease: "power3.out", stagger: 0.08 }, 0.45)
+        .fromTo(textes, { opacity: 0, y: 80 }, { opacity: 1, y: 0, duration: 1.15, ease: "power3.out" }, 0.6)
+        .to(suite, { autoAlpha: 1, duration: 0.6, ease: "power1.out" }, 1.2)
+        .set(etoileImg, { opacity: 1 }, 1.3)
+        .set(vol, { opacity: 0 }, 1.3);
+    });
+  })();
+
   // bouton « Parlons-en » : seulement après la présentation (la couverture reste pure)
   const contact = document.querySelector(".contact");
   const apres = document.querySelector("#socialads") || document.querySelectorAll(".slide")[2];
@@ -401,7 +566,7 @@
 
   // ---------- formulaire de contact (remplace l'ouverture de l'app Mail) ----------
   // Envoi par Web3Forms (clé publique, faite pour être dans la page). Sans clé : brouillon de mail.
-  const CLE_FORMULAIRE = "";
+  const CLE_FORMULAIRE = "f9d2f5a4-c598-4d51-b67f-7631e6c0a27d";
   function ouvrirFormulaire() {
     window.__suivi("formulaire");
     const box = document.createElement("div");
