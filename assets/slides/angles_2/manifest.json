@@ -1,0 +1,43 @@
+{
+ "id": "angles_2",
+ "w": 3600,
+ "h": 1200,
+ "planes": [
+  {
+   "id": "ROAD",
+   "src": "ROAD.webp",
+   "x": 0,
+   "y": 0,
+   "w": 1200,
+   "h": 1200,
+   "depth": 0.1,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": []
+  },
+  {
+   "id": "a_sunlight",
+   "src": "a_sunlight.webp",
+   "x": 1200,
+   "y": 0,
+   "w": 1200,
+   "h": 1200,
+   "depth": 0.1,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": []
+  },
+  {
+   "id": "volcan",
+   "src": "volcan.webp",
+   "x": 2400,
+   "y": 0,
+   "w": 1200,
+   "h": 1200,
+   "depth": 0.1,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": []
+  }
+ ]
+}

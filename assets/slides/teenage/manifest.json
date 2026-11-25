@@ -1,0 +1,162 @@
+{
+ "id": "teenage",
+ "w": 3840,
+ "h": 2160,
+ "planes": [
+  {
+   "id": "filigrane",
+   "src": "filigrane.webp",
+   "x": -1024,
+   "y": 0,
+   "w": 1704,
+   "h": 613,
+   "depth": -0.25,
+   "blend": "normal",
+   "role": "fond",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "ko_carre",
+   "src": "ko_carre.webp",
+   "x": 51,
+   "y": 1173,
+   "w": 990,
+   "h": 987,
+   "depth": 0.55,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 0.0,
+     "angle": 90,
+     "size": 122.0,
+     "opacity": 100.0,
+     "choke": 11.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 255.0,
+      "b'Grn '": 255.0,
+      "b'Bl  '": 255.0
+     },
+     "layer": "ads_ko_carré"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "ko_story",
+   "src": "ko_story.webp",
+   "x": 842,
+   "y": 420,
+   "w": 1084,
+   "h": 1740,
+   "depth": 0.3,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 0.0,
+     "angle": 90,
+     "size": 122.0,
+     "opacity": 100.0,
+     "choke": 11.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 255.0,
+      "b'Grn '": 255.0,
+      "b'Bl  '": 255.0
+     },
+     "layer": "ads_ko_story"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "tp7_portrait",
+   "src": "tp7_portrait.webp",
+   "x": 1727,
+   "y": 609,
+   "w": 1291,
+   "h": 1551,
+   "depth": 0.45,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 0.0,
+     "angle": 90,
+     "size": 122.0,
+     "opacity": 100.0,
+     "choke": 11.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 255.0,
+      "b'Grn '": 255.0,
+      "b'Bl  '": 255.0
+     },
+     "layer": "ads_tp7_portrait"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "tp7_portrait2",
+   "src": "tp7_portrait2.webp",
+   "x": 2819,
+   "y": 1010,
+   "w": 970,
+   "h": 1150,
+   "depth": 0.7,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 0.0,
+     "angle": 90,
+     "size": 122.0,
+     "opacity": 100.0,
+     "choke": 11.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 255.0,
+      "b'Grn '": 255.0,
+      "b'Bl  '": 255.0
+     },
+     "layer": "ads_tp7_portrait2"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "logo",
+   "src": "logo.webp",
+   "x": 112,
+   "y": 118,
+   "w": 883,
+   "h": 231,
+   "depth": 0.1,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "legende",
+   "src": "legende.webp",
+   "x": 3178,
+   "y": 176,
+   "w": 512,
+   "h": 135,
+   "depth": 0.1,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  }
+ ]
+}

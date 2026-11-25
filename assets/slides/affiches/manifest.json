@@ -1,0 +1,107 @@
+{
+ "id": "affiches",
+ "w": 3840,
+ "h": 2160,
+ "planes": [
+  {
+   "id": "staracademy",
+   "src": "staracademy.webp",
+   "x": 274,
+   "y": 574,
+   "w": 920,
+   "h": 1214,
+   "depth": 0.35,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 0.0,
+     "angle": 29,
+     "size": 18.0,
+     "opacity": 66.0,
+     "choke": 1.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 220.00000208616257,
+      "b'Grn '": 220.00000208616257,
+      "b'Bl  '": 220.00000208616257
+     },
+     "layer": "Affich_STAR-ACADEMY"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "bombers",
+   "src": "bombers.webp",
+   "x": 1462,
+   "y": 574,
+   "w": 920,
+   "h": 1214,
+   "depth": 0.55,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 0.0,
+     "angle": 29,
+     "size": 18.0,
+     "opacity": 66.0,
+     "choke": 1.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 220.00000208616257,
+      "b'Grn '": 220.00000208616257,
+      "b'Bl  '": 220.00000208616257
+     },
+     "layer": "PostBombers"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "ghibli",
+   "src": "ghibli.webp",
+   "x": 2635,
+   "y": 574,
+   "w": 919,
+   "h": 1214,
+   "depth": 0.3,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 0.0,
+     "angle": 29,
+     "size": 18.0,
+     "opacity": 66.0,
+     "choke": 1.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 220.00000208616257,
+      "b'Grn '": 220.00000208616257,
+      "b'Bl  '": 220.00000208616257
+     },
+     "layer": "Affiche_V2"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "textes",
+   "src": "textes.webp",
+   "x": 150,
+   "y": 177,
+   "w": 3550,
+   "h": 1840,
+   "depth": 0.06,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  }
+ ]
+}

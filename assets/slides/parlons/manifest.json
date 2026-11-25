@@ -1,0 +1,64 @@
+{
+ "id": "parlons",
+ "w": 3838,
+ "h": 2159,
+ "planes": [
+  {
+   "id": "mail",
+   "src": "mail.webp",
+   "x": 1522,
+   "y": 1879,
+   "w": 794,
+   "h": 71,
+   "depth": 0.18,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "logo",
+   "src": "logo.webp",
+   "x": 1761,
+   "y": 1740,
+   "w": 316,
+   "h": 89,
+   "depth": 0.18,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "phrase",
+   "src": "phrase.webp",
+   "x": 1070,
+   "y": 825,
+   "w": 1699,
+   "h": 510,
+   "depth": 0.1,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  }
+ ],
+ "liens": [
+  {
+   "x": 1050,
+   "y": 780,
+   "w": 1740,
+   "h": 540,
+   "href": "mailto:pztcontactpro@gmail.com",
+   "label": "Écrire à Adrien"
+  },
+  {
+   "x": 1500,
+   "y": 1830,
+   "w": 840,
+   "h": 110,
+   "href": "mailto:pztcontactpro@gmail.com",
+   "label": "pztcontactpro@gmail.com"
+  }
+ ]
+}

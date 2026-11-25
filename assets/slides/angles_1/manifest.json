@@ -1,0 +1,55 @@
+{
+ "id": "angles_1",
+ "w": 4800,
+ "h": 1200,
+ "planes": [
+  {
+   "id": "sky",
+   "src": "sky.webp",
+   "x": 0,
+   "y": 0,
+   "w": 1200,
+   "h": 1200,
+   "depth": 0.1,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": []
+  },
+  {
+   "id": "ROSE",
+   "src": "ROSE.webp",
+   "x": 1200,
+   "y": 0,
+   "w": 1200,
+   "h": 1200,
+   "depth": 0.1,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": []
+  },
+  {
+   "id": "desert",
+   "src": "desert.webp",
+   "x": 2400,
+   "y": 0,
+   "w": 1200,
+   "h": 1200,
+   "depth": 0.1,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": []
+  },
+  {
+   "id": "PARK",
+   "src": "PARK.webp",
+   "x": 3600,
+   "y": 0,
+   "w": 1200,
+   "h": 1200,
+   "depth": 0.1,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": []
+  }
+ ]
+}

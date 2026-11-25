@@ -1,0 +1,72 @@
+{
+ "id": "trinity_cd",
+ "w": 3840,
+ "h": 2160,
+ "planes": [
+  {
+   "id": "cd",
+   "src": "cd.webp",
+   "x": 2854,
+   "y": 149,
+   "w": 806,
+   "h": 1631,
+   "depth": 0.65,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "images",
+   "src": "images.webp",
+   "x": 805,
+   "y": 418,
+   "w": 2228,
+   "h": 1270,
+   "depth": 0.35,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "fond",
+   "src": "fond.webp",
+   "x": 0,
+   "y": 0,
+   "w": 3840,
+   "h": 2160,
+   "depth": -0.12,
+   "blend": "multiply",
+   "role": "fond",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "texte",
+   "src": "texte.webp",
+   "x": 202,
+   "y": 1776,
+   "w": 1207,
+   "h": 289,
+   "depth": 0.06,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "titre",
+   "src": "titre.webp",
+   "x": 1757,
+   "y": 172,
+   "w": 337,
+   "h": 188,
+   "depth": 0.06,
+   "blend": "multiply",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  }
+ ]
+}

@@ -1,0 +1,230 @@
+{
+ "id": "instagram",
+ "w": 3840,
+ "h": 2160,
+ "planes": [
+  {
+   "id": "zidane",
+   "src": "zidane.webp",
+   "x": 2250,
+   "y": 1423,
+   "w": 1453,
+   "h": 737,
+   "depth": 0.5,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 0.0,
+     "angle": 29,
+     "size": 103.0,
+     "opacity": 31.0,
+     "choke": 14.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 106.00000128149986,
+      "b'Grn '": 106.00000128149986,
+      "b'Bl  '": 106.00000128149986
+     },
+     "layer": "Rectangle 7 copie 3"
+    },
+    {
+     "type": "Stroke",
+     "angle": 0.0,
+     "size": 10.0,
+     "opacity": 100.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 255.0,
+      "b'Grn '": 255.0,
+      "b'Bl  '": 255.0
+     },
+     "layer": "Rectangle 7 copie 3"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "nj",
+   "src": "nj.webp",
+   "x": 128,
+   "y": 1423,
+   "w": 1383,
+   "h": 737,
+   "depth": 0.58,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 0.0,
+     "angle": 29,
+     "size": 103.0,
+     "opacity": 31.0,
+     "choke": 14.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 106.00000128149986,
+      "b'Grn '": 106.00000128149986,
+      "b'Bl  '": 106.00000128149986
+     },
+     "layer": "Rectangle 7 copie 5"
+    },
+    {
+     "type": "Stroke",
+     "angle": 0.0,
+     "size": 10.0,
+     "opacity": 100.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 255.0,
+      "b'Grn '": 255.0,
+      "b'Bl  '": 255.0
+     },
+     "layer": "Rectangle 7 copie 5"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "cover",
+   "src": "cover.webp",
+   "x": 1739,
+   "y": 1245,
+   "w": 1453,
+   "h": 915,
+   "depth": 0.36,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 0.0,
+     "angle": 29,
+     "size": 103.0,
+     "opacity": 31.0,
+     "choke": 14.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 106.00000128149986,
+      "b'Grn '": 106.00000128149986,
+      "b'Bl  '": 106.00000128149986
+     },
+     "layer": "Rectangle 7"
+    },
+    {
+     "type": "Stroke",
+     "angle": 0.0,
+     "size": 10.0,
+     "opacity": 100.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 255.0,
+      "b'Grn '": 255.0,
+      "b'Bl  '": 255.0
+     },
+     "layer": "Rectangle 7"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "blurry",
+   "src": "blurry.webp",
+   "x": 637,
+   "y": 1245,
+   "w": 1453,
+   "h": 915,
+   "depth": 0.42,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 0.0,
+     "angle": 29,
+     "size": 103.0,
+     "opacity": 31.0,
+     "choke": 14.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 106.00000128149986,
+      "b'Grn '": 106.00000128149986,
+      "b'Bl  '": 106.00000128149986
+     },
+     "layer": "Rectangle 7 copie 4"
+    },
+    {
+     "type": "Stroke",
+     "angle": 0.0,
+     "size": 10.0,
+     "opacity": 100.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 255.0,
+      "b'Grn '": 255.0,
+      "b'Bl  '": 255.0
+     },
+     "layer": "Rectangle 7 copie 4"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "fire",
+   "src": "fire.webp",
+   "x": 1194,
+   "y": 1050,
+   "w": 1453,
+   "h": 1110,
+   "depth": 0.25,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 0.0,
+     "angle": 29,
+     "size": 103.0,
+     "opacity": 31.0,
+     "choke": 14.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 106.00000128149986,
+      "b'Grn '": 106.00000128149986,
+      "b'Bl  '": 106.00000128149986
+     },
+     "layer": "Rectangle 7 copie"
+    },
+    {
+     "type": "Stroke",
+     "angle": 0.0,
+     "size": 10.0,
+     "opacity": 100.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 255.0,
+      "b'Grn '": 255.0,
+      "b'Bl  '": 255.0
+     },
+     "layer": "Rectangle 7 copie"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "texte",
+   "src": "texte.webp",
+   "x": 34,
+   "y": 30,
+   "w": 3774,
+   "h": 927,
+   "depth": 0.06,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  }
+ ]
+}

@@ -1,0 +1,59 @@
+{
+ "id": "projets",
+ "w": 3840,
+ "h": 2160,
+ "planes": [
+  {
+   "id": "barre",
+   "src": "barre.webp",
+   "x": 0,
+   "y": 0,
+   "w": 3839,
+   "h": 59,
+   "depth": 0.04,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "projets",
+   "src": "projets.webp",
+   "x": 102,
+   "y": 1089,
+   "w": 2764,
+   "h": 952,
+   "depth": 0.08,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "more",
+   "src": "more.webp",
+   "x": 2902,
+   "y": 1392,
+   "w": 835,
+   "h": 639,
+   "depth": 0.16,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "bloc",
+   "src": "bloc.webp",
+   "x": 100,
+   "y": 152,
+   "w": 3639,
+   "h": 843,
+   "depth": 0.25,
+   "blend": "multiply",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  }
+ ]
+}

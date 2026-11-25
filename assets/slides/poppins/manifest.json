@@ -1,0 +1,72 @@
+{
+ "id": "poppins",
+ "w": 3840,
+ "h": 2160,
+ "planes": [
+  {
+   "id": "logo",
+   "src": "logo.webp",
+   "x": 145,
+   "y": 161,
+   "w": 869,
+   "h": 158,
+   "depth": 0.08,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "kakemonos",
+   "src": "kakemonos.webp",
+   "x": 2179,
+   "y": 680,
+   "w": 1471,
+   "h": 1292,
+   "depth": 0.45,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "posts",
+   "src": "posts.webp",
+   "x": 145,
+   "y": 611,
+   "w": 2275,
+   "h": 1430,
+   "depth": 0.3,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "mascotte",
+   "src": "mascotte.webp",
+   "x": 2189,
+   "y": 1611,
+   "w": 411,
+   "h": 411,
+   "depth": 0.75,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "legende",
+   "src": "legende.webp",
+   "x": 3027,
+   "y": 178,
+   "w": 623,
+   "h": 144,
+   "depth": 0.08,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  }
+ ]
+}

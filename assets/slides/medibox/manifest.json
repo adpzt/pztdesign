@@ -1,0 +1,98 @@
+{
+ "id": "medibox",
+ "w": 3840,
+ "h": 2160,
+ "planes": [
+  {
+   "id": "fond",
+   "src": "fond.webp",
+   "x": -106,
+   "y": 497,
+   "w": 3951,
+   "h": 1663,
+   "depth": -0.2,
+   "blend": "normal",
+   "role": "fond",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "grand",
+   "src": "grand.webp",
+   "x": 164,
+   "y": 437,
+   "w": 1290,
+   "h": 1613,
+   "depth": 0.3,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "col2",
+   "src": "col2.webp",
+   "x": 1519,
+   "y": 444,
+   "w": 574,
+   "h": 1601,
+   "depth": 0.5,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "col3",
+   "src": "col3.webp",
+   "x": 2119,
+   "y": 445,
+   "w": 568,
+   "h": 1600,
+   "depth": 0.38,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "textes",
+   "src": "textes.webp",
+   "x": 174,
+   "y": 111,
+   "w": 3468,
+   "h": 292,
+   "depth": 0.08,
+   "blend": "multiply",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "col4",
+   "src": "col4.webp",
+   "x": 2716,
+   "y": 445,
+   "w": 568,
+   "h": 1600,
+   "depth": 0.6,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "col5",
+   "src": "col5.webp",
+   "x": 3318,
+   "y": 446,
+   "w": 324,
+   "h": 1599,
+   "depth": 0.45,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  }
+ ]
+}

@@ -1,0 +1,112 @@
+{
+ "id": "etatpur",
+ "w": 3840,
+ "h": 2160,
+ "planes": [
+  {
+   "id": "fond",
+   "src": "fond.webp",
+   "x": -611,
+   "y": 67,
+   "w": 4745,
+   "h": 2093,
+   "depth": -0.3,
+   "blend": "normal",
+   "role": "fond",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "hero",
+   "src": "hero.webp",
+   "x": 735,
+   "y": 594,
+   "w": 1120,
+   "h": 1434,
+   "depth": 0.6,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "Stroke",
+     "angle": 0.0,
+     "size": 27.0,
+     "opacity": 100.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 247.00000047683716,
+      "b'Grn '": 247.00000047683716,
+      "b'Bl  '": 247.00000047683716
+     },
+     "layer": "04"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "post02",
+   "src": "post02.webp",
+   "x": 1953,
+   "y": 1287,
+   "w": 717,
+   "h": 716,
+   "depth": 0.35,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "post03",
+   "src": "post03.webp",
+   "x": 2357,
+   "y": 697,
+   "w": 816,
+   "h": 820,
+   "depth": 0.8,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "post01",
+   "src": "post01.webp",
+   "x": 1585,
+   "y": 663,
+   "w": 840,
+   "h": 855,
+   "depth": 0.5,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "legende",
+   "src": "legende.webp",
+   "x": 3233,
+   "y": 176,
+   "w": 456,
+   "h": 144,
+   "depth": 0.1,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "logo",
+   "src": "logo.webp",
+   "x": 165,
+   "y": 172,
+   "w": 746,
+   "h": 156,
+   "depth": 0.1,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  }
+ ]
+}

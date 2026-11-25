@@ -1,0 +1,90 @@
+{
+ "id": "performa",
+ "w": 3840,
+ "h": 2160,
+ "planes": [
+  {
+   "id": "ads",
+   "src": "ads.webp",
+   "x": 122,
+   "y": 490,
+   "w": 3714,
+   "h": 1667,
+   "depth": 0.35,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 0.0,
+     "angle": 90,
+     "size": 122.0,
+     "opacity": 100.0,
+     "choke": 11.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 255.0,
+      "b'Grn '": 255.0,
+      "b'Bl  '": 255.0
+     },
+     "layer": "Rectangle 1"
+    },
+    {
+     "type": "Stroke",
+     "angle": 0.0,
+     "size": 5.0,
+     "opacity": 100.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 247.00000047683716,
+      "b'Grn '": 247.00000047683716,
+      "b'Bl  '": 247.00000047683716
+     },
+     "layer": "Rectangle 1"
+    },
+    {
+     "type": "DropShadow",
+     "distance": 0.0,
+     "angle": 90,
+     "size": 122.0,
+     "opacity": 100.0,
+     "choke": 11.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 255.0,
+      "b'Grn '": 255.0,
+      "b'Bl  '": 255.0
+     },
+     "layer": "Portrait 2"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "logos",
+   "src": "logos.webp",
+   "x": 150,
+   "y": 170,
+   "w": 787,
+   "h": 151,
+   "depth": 0.08,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "legende",
+   "src": "legende.webp",
+   "x": 3028,
+   "y": 176,
+   "w": 662,
+   "h": 144,
+   "depth": 0.08,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  }
+ ]
+}

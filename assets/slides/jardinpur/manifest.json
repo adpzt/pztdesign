@@ -1,0 +1,130 @@
+{
+ "id": "jardinpur",
+ "w": 3840,
+ "h": 2160,
+ "planes": [
+  {
+   "id": "sapin",
+   "src": "sapin.webp",
+   "x": 2928,
+   "y": 426,
+   "w": 762,
+   "h": 1131,
+   "depth": -0.2,
+   "blend": "normal",
+   "role": "fond",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "story04",
+   "src": "story04.webp",
+   "x": 180,
+   "y": 534,
+   "w": 861,
+   "h": 1532,
+   "depth": 0.35,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "carre01",
+   "src": "carre01.webp",
+   "x": 1835,
+   "y": 515,
+   "w": 977,
+   "h": 977,
+   "depth": 0.6,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 3.0,
+     "angle": 147.0,
+     "size": 24.0,
+     "opacity": 25.0,
+     "choke": 4.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 81.00000277161598,
+      "b'Grn '": 81.00000277161598,
+      "b'Bl  '": 81.00000277161598
+     },
+     "layer": "concept01_carré"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "petits",
+   "src": "petits.webp",
+   "x": 1853,
+   "y": 1420,
+   "w": 1754,
+   "h": 721,
+   "depth": 0.42,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 0.0,
+     "angle": 140.0,
+     "size": 81.0,
+     "opacity": 53.0,
+     "choke": 4.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 255.0,
+      "b'Grn '": 255.0,
+      "b'Bl  '": 255.0
+     },
+     "layer": "concept09_carré"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "legende",
+   "src": "legende.webp",
+   "x": 3240,
+   "y": 176,
+   "w": 450,
+   "h": 94,
+   "depth": 0.08,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "logo",
+   "src": "logo.webp",
+   "x": 154,
+   "y": 142,
+   "w": 816,
+   "h": 182,
+   "depth": 0.08,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "colonne",
+   "src": "colonne.webp",
+   "x": 121,
+   "y": 534,
+   "w": 1840,
+   "h": 1626,
+   "depth": 0.5,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  }
+ ]
+}

@@ -1,0 +1,46 @@
+{
+ "id": "socialads",
+ "w": 3840,
+ "h": 2160,
+ "planes": [
+  {
+   "id": "texte",
+   "src": "texte.webp",
+   "x": 76,
+   "y": 1401,
+   "w": 1200,
+   "h": 644,
+   "depth": 0.05,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "titre",
+   "src": "titre.webp",
+   "x": 79,
+   "y": 256,
+   "w": 862,
+   "h": 384,
+   "depth": 0.05,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "bloc",
+   "src": "bloc.webp",
+   "x": 1634,
+   "y": 110,
+   "w": 2127,
+   "h": 1940,
+   "depth": 0.35,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  }
+ ]
+}

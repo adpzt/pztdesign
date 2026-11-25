@@ -1,0 +1,72 @@
+{
+ "id": "stories",
+ "w": 3840,
+ "h": 2160,
+ "planes": [
+  {
+   "id": "mini1",
+   "src": "mini1.webp",
+   "x": 2164,
+   "y": 370,
+   "w": 1465,
+   "h": 823,
+   "depth": 0.3,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "mini2",
+   "src": "mini2.webp",
+   "x": 2164,
+   "y": 1245,
+   "w": 1465,
+   "h": 823,
+   "depth": 0.5,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "stories",
+   "src": "stories.webp",
+   "x": 164,
+   "y": 371,
+   "w": 973,
+   "h": 1696,
+   "depth": 0.4,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "telephone",
+   "src": "telephone.webp",
+   "x": 1169,
+   "y": 369,
+   "w": 956,
+   "h": 1700,
+   "depth": 0.65,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "labels",
+   "src": "labels.webp",
+   "x": 164,
+   "y": 280,
+   "w": 2397,
+   "h": 40,
+   "depth": 0.08,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  }
+ ]
+}

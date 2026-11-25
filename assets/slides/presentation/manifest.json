@@ -1,0 +1,20 @@
+{
+ "id": "presentation",
+ "w": 3838,
+ "h": 2159,
+ "planes": [
+  {
+   "id": "photo",
+   "src": "photo.webp",
+   "x": 0,
+   "y": 596,
+   "w": 1499,
+   "h": 1563,
+   "depth": 0.3,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  }
+ ]
+}

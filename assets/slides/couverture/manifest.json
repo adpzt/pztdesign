@@ -1,0 +1,114 @@
+{
+ "id": "couverture",
+ "w": 3900,
+ "h": 2262,
+ "planes": [
+  {
+   "id": "portfolio",
+   "src": "portfolio.webp",
+   "x": 1182,
+   "y": 1714,
+   "w": 2659,
+   "h": 449,
+   "depth": 0.05,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "annee",
+   "src": "annee.webp",
+   "x": 3389,
+   "y": 1496,
+   "w": 437,
+   "h": 189,
+   "depth": 0.25,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "logotype",
+   "src": "logotype.webp",
+   "x": 24,
+   "y": 1108,
+   "w": 1463,
+   "h": 406,
+   "depth": 0.1,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "grille",
+   "src": "grille.webp",
+   "x": 2135,
+   "y": 302,
+   "w": 1701,
+   "h": 1699,
+   "depth": 0.15,
+   "blend": "multiply",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "carre",
+   "src": "carre.webp",
+   "x": 2083,
+   "y": 235,
+   "w": 972,
+   "h": 972,
+   "depth": 0.3,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 11.0,
+     "angle": -159.0,
+     "size": 65.0,
+     "opacity": 43.0,
+     "choke": 8.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 100.00000163912773,
+      "b'Grn '": 100.00000163912773,
+      "b'Bl  '": 100.00000163912773
+     },
+     "layer": "Rectangle 1"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "caches",
+   "src": "caches.webp",
+   "x": 1975,
+   "y": 141,
+   "w": 1901,
+   "h": 1573,
+   "depth": 0.3,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "etoile",
+   "src": "etoile.webp",
+   "x": 2218,
+   "y": 395,
+   "w": 654,
+   "h": 654,
+   "depth": 0.6,
+   "blend": "normal",
+   "role": "etoile",
+   "fx": [],
+   "suit": null
+  }
+ ]
+}

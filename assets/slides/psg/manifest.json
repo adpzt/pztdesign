@@ -1,0 +1,133 @@
+{
+ "id": "psg",
+ "w": 3840,
+ "h": 2160,
+ "planes": [
+  {
+   "id": "filigrane",
+   "src": "filigrane.webp",
+   "x": 876,
+   "y": 36,
+   "w": 2088,
+   "h": 2088,
+   "depth": -0.2,
+   "blend": "normal",
+   "role": "fond",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "barre",
+   "src": "barre.webp",
+   "x": 0,
+   "y": 0,
+   "w": 3840,
+   "h": 20,
+   "depth": 0.04,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  },
+  {
+   "id": "barcola",
+   "src": "barcola.webp",
+   "x": 2215,
+   "y": 385,
+   "w": 1349,
+   "h": 1643,
+   "depth": 0.6,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 0.0,
+     "angle": 29,
+     "size": 84.0,
+     "opacity": 100.0,
+     "choke": 19.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 255.0,
+      "b'Grn '": 255.0,
+      "b'Bl  '": 255.0
+     },
+     "layer": "barcola v2"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "startxi",
+   "src": "startxi.webp",
+   "x": 273,
+   "y": 711,
+   "w": 1083,
+   "h": 1315,
+   "depth": 0.3,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 0.0,
+     "angle": 29,
+     "size": 84.0,
+     "opacity": 100.0,
+     "choke": 19.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 255.0,
+      "b'Grn '": 255.0,
+      "b'Bl  '": 255.0
+     },
+     "layer": "StartXI"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "groupe",
+   "src": "groupe.webp",
+   "x": 1244,
+   "y": 711,
+   "w": 1081,
+   "h": 1315,
+   "depth": 0.42,
+   "blend": "normal",
+   "role": "visuel",
+   "fx": [
+    {
+     "type": "DropShadow",
+     "distance": 0.0,
+     "angle": 29,
+     "size": 84.0,
+     "opacity": 100.0,
+     "choke": 19.0,
+     "blend_mode": "BlendMode.NORMAL",
+     "color": {
+      "b'Rd  '": 255.0,
+      "b'Grn '": 255.0,
+      "b'Bl  '": 255.0
+     },
+     "layer": "GroupePost"
+    }
+   ],
+   "suit": null
+  },
+  {
+   "id": "textes",
+   "src": "textes.webp",
+   "x": 106,
+   "y": 169,
+   "w": 2631,
+   "h": 579,
+   "depth": 0.06,
+   "blend": "normal",
+   "role": "texte",
+   "fx": [],
+   "suit": null
+  }
+ ]
+}
