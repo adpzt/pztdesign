@@ -9,9 +9,21 @@
 
   // ---------- construction ----------
   // les calques se chargent deux écrans avant d'arriver à l'écran
+  const charger = img => {
+    if (img.dataset.srcset) { img.sizes = img.dataset.sizes; img.srcset = img.dataset.srcset; }
+    img.src = img.dataset.src;
+  };
   const prechargeur = new IntersectionObserver(entries => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.src = e.target.dataset.src; prechargeur.unobserve(e.target); } });
+    entries.forEach(e => { if (e.isIntersecting) { charger(e.target); prechargeur.unobserve(e.target); } });
   }, { rootMargin: "200% 0px" });
+  // version légère (_m, moitié de la taille) pour les petits écrans : le navigateur choisit seul
+  // f = part de la largeur de la slide occupée par l'image
+  function leger(img, chemin, w, f) {
+    if (!chemin.endsWith(".webp")) return;
+    img.dataset.f = f;
+    img.dataset.srcset = `${chemin.replace(/\.webp$/, "_m.webp")} ${Math.round(w / 2)}w, ${chemin} ${w}w`;
+    img.dataset.sizes = `(max-width: 767px) ${(f * 100).toFixed(2)}vw, ${(f * 85).toFixed(2)}vw`;
+  }
   function plan(p, m, dossier) {
     const el = document.createElement("div");
     el.className = "plan" + (p.blend === "multiply" ? " plan--multiply" : "");
@@ -31,6 +43,7 @@
     img.width = p.w; img.height = p.h;
     img.decoding = "async";
     img.dataset.src = `assets/slides/${dossier}/${p.src}`;
+    leger(img, img.dataset.src, p.w, p.w / m.w);
     prechargeur.observe(img);
     el.appendChild(img);
     return el;
@@ -176,7 +189,9 @@
     s.style.aspectRatio = `${b.w} / ${b.h}`;
     const img = new Image();
     img.className = "slide__video";
-    img.src = `assets/images/${b.src}.webp`;
+    img.dataset.src = `assets/images/${b.src}.webp`;
+    leger(img, img.dataset.src, b.w, 1);
+    prechargeur.observe(img);
     img.alt = b.alt || "";
     img.width = b.w; img.height = b.h;
     img.loading = "lazy"; img.decoding = "async";
@@ -237,7 +252,11 @@
     clone.removeAttribute("id");
     clone.classList.add("zoom__slide");
     clone.querySelectorAll("[style]").forEach(el => { el.style.transform = ""; el.style.opacity = ""; el.style.translate = ""; el.style.rotate = ""; el.style.scale = ""; });
-    clone.querySelectorAll("img[data-src]").forEach(img => { if (!img.src) img.src = img.dataset.src; });
+    // la slide agrandie fait 260 vw : on reprend la version complète des images
+    clone.querySelectorAll("img[data-src]").forEach(img => {
+      if (img.dataset.srcset) img.dataset.sizes = `${(img.dataset.f * 260).toFixed(2)}vw`;
+      charger(img);
+    });
     clone.querySelectorAll("video").forEach(v => { v.muted = true; v.play().catch(() => {}); });
     scroller.appendChild(clone);
     const fermer = document.createElement("button");

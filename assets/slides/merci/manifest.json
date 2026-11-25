@@ -5,13 +5,13 @@
  "planes": [
   {
    "id": "texte",
-   "src": "texte.webp",
-   "x": 470,
-   "y": 360,
-   "w": 950,
-   "h": 345,
+   "src": "texte.svg",
+   "x": 480,
+   "y": 370,
+   "w": 940,
+   "h": 330,
    "depth": 0.08,
-   "blend": "multiply",
+   "blend": "normal",
    "role": "texte",
    "fx": []
   },
