@@ -66,7 +66,21 @@
    "blend": "normal",
    "role": "texte",
    "fx": [],
-   "suit": null
+   "suit": null,
+   "zones": [
+    [
+     164,
+     280,
+     336,
+     40
+    ],
+    [
+     2154,
+     280,
+     407,
+     40
+    ]
+   ]
   }
  ]
 }
