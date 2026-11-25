@@ -56,19 +56,6 @@
    "suit": null
   },
   {
-   "id": "textes",
-   "src": "textes.webp",
-   "x": 174,
-   "y": 111,
-   "w": 3468,
-   "h": 292,
-   "depth": 0.08,
-   "blend": "multiply",
-   "role": "texte",
-   "fx": [],
-   "suit": null
-  },
-  {
    "id": "col4",
    "src": "col4.webp",
    "x": 2716,
@@ -93,6 +80,24 @@
    "role": "visuel",
    "fx": [],
    "suit": null
+  }
+ ],
+ "textes": [
+  {
+   "id": "t_pass",
+   "txt": "Campagne PASS/LAS",
+   "x": 174,
+   "base": 410.2,
+   "size": 39.5,
+   "weight": 500
+  },
+  {
+   "id": "t_webinaire",
+   "txt": "Webinaire",
+   "x": 2718,
+   "base": 410.2,
+   "size": 39.5,
+   "weight": 500
   }
  ]
 }

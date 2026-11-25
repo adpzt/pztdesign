@@ -21,7 +21,7 @@
   function leger(img, chemin, w, f) {
     if (!chemin.endsWith(".webp")) return;
     img.dataset.f = f;
-    img.dataset.srcset = `${chemin.replace(/\.webp$/, "_m.webp")} ${Math.round(w / 2)}w, ${chemin} ${w}w`;
+    img.dataset.srcset = `${chemin.replace(/\.webp$/, "_m.webp")} ${Math.round(w / 2)}w, ${chemin.replace(/\.webp$/, "_l.webp")} ${Math.round(w * 2 / 3)}w, ${chemin} ${w}w`;
     img.dataset.sizes = `(max-width: 767px) ${(f * 100).toFixed(2)}vw, ${(f * 85).toFixed(2)}vw`;
   }
   function plan(p, m, dossier) {
@@ -56,6 +56,15 @@
     s.id = b.id;
     s.style.aspectRatio = `${m.w} / ${m.h}`;
     m.planes.forEach(p => s.appendChild(plan(p, m, b.id)));
+    // textes vivants (police du site), position = ligne de base dans le repère du canevas
+    (m.textes || []).forEach(t => {
+      const el = document.createElement("div");
+      el.className = "plan plan--texte";
+      el.dataset.role = "texte"; el.dataset.depth = 0;
+      el.style.left = pct(t.x, m.w); el.style.top = pct(t.base, m.h);
+      el.innerHTML = `<span style="font-size:calc(${t.size} / ${m.w} * 100cqw);font-weight:${t.weight || 500}${t.color ? ";color:" + t.color : ""}">${t.txt}</span>`;
+      s.appendChild(el);
+    });
     (m.liens || []).forEach(l => {
       const a = document.createElement("a");
       a.className = "lien";
@@ -143,6 +152,7 @@
 
   // fenêtre vidéo par-dessus la page (la page reste visible derrière, floutée)
   function ouvrirVideo(b) {
+    if (window.__suivi) window.__suivi("video", b.titre);
     const box = document.createElement("div");
     box.className = "pop";
     box.setAttribute("role", "dialog");
@@ -199,13 +209,35 @@
     return s;
   }
 
+  // fin : merci + « Un projet en tête ? Parlons-en. » sur un seul écran (repère 1920 x 1080)
+  function slideFin(b) {
+    const s = document.createElement("section");
+    s.className = "slide slide--fin";
+    s.id = b.id;
+    s.style.aspectRatio = "1920 / 1080";
+    s.innerHTML = `
+      <div class="plan fin__etoile" data-role="etoile" data-depth="0.35"><svg viewBox="0 0 100 100"><use href="#etoile"/></svg></div>
+      <div class="plan fin__merci" data-role="texte"><img src="assets/slides/merci/texte.svg" alt="pztdesign, merci" width="940" height="330"></div>
+      <div class="plan fin__bloc" data-role="texte"><div>
+        <p class="fin__question">Un projet en tête ?</p>
+        <p class="fin__titre">Parlons-en.</p>
+        <div class="fin__actions">
+          <a class="fin__bouton" href="mailto:pztcontactpro@gmail.com"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#etoile"/></svg>Écrire à Adrien</a>
+          <a class="fin__mail" href="mailto:pztcontactpro@gmail.com">pztcontactpro@gmail.com</a>
+        </div>
+      </div></div>
+      <p class="plan fin__pied" data-role="texte"><span>pztdesign · Graphiste &amp; DA freelance<span class="fin__lieu"><span class="fin__sep"> · </span>Paris, France</span></span></p>`;
+    return s;
+  }
+
   const blocs = window.PZT_BLOCS || [];
   blocs.forEach(b => {
     const s = b.type === "presentation" ? slidePresentation(b)
             : b.type === "video" ? slideVideo(b)
             : b.type === "image" ? slideImage(b)
             : b.type === "lecteur" ? slideLecteur(b)
-            : b.type === "duo" ? slideDuo(b) : slidePlans(b);
+            : b.type === "duo" ? slideDuo(b)
+            : b.type === "fin" ? slideFin(b) : slidePlans(b);
     page.appendChild(s);
   });
 
@@ -272,7 +304,7 @@
       scroller.scrollLeft = 0;
     });
   }
-  document.querySelectorAll("#page > .slide:not(.slide--lecteur):not(.slide--duo)").forEach(slide => {
+  document.querySelectorAll("#page > .slide:not(.slide--lecteur):not(.slide--duo):not(.slide--fin)").forEach(slide => {
     slide.addEventListener("click", e => {
       if (!mobile.matches || e.target.closest("a, button")) return;
       ouvrirZoom(slide);
@@ -314,46 +346,38 @@
     }
     const H = () => s.getBoundingClientRect().height;
 
+    // Parallaxe : seuls les éléments de décor (formes de fond, étoiles) glissent.
+    // Les visuels et leurs textes restent calés comme dans le PSD (rien ne se masque).
+    // Apparition : tout le contenu de la slide monte ensemble, en vague de gauche à droite.
+    const contenus = [];
     s.querySelectorAll(".plan").forEach(el => {
       const d = parseFloat(el.dataset.depth) || 0;
       const role = el.dataset.role;
-      // parallaxe : plus la profondeur est grande, plus le plan glisse
-      if (d !== 0) {
-        const amp = () => (mobile.matches ? 0.12 : 0.22) * d * H();
+      const decor = role === "fond" || role === "etoile";
+      const img = el.firstElementChild;
+      if (decor && d !== 0) {
+        el.style.willChange = "transform";
+        const amp = () => (mobile.matches ? 0.12 : 0.26) * d * H();
         gsap.fromTo(el, { y: () => amp() }, {
           y: () => -amp(), ease: "none",
           scrollTrigger: { trigger: s, start: "top bottom", end: "bottom top", scrub: true, invalidateOnRefresh: true },
         });
       }
-      // apparition à l'entrée (sauf la couverture, déjà à l'écran)
-      const img = el.firstElementChild;
-      const chef = el.dataset.suit && s.querySelector(`.plan[data-id="${el.dataset.suit}"]`);
-      if (chef) {
-        // ce plan arrive en même temps que celui qu'il accompagne
-        const visuel = chef.dataset.role === "visuel";
-        gsap.from(img, {
-          opacity: 0, y: visuel ? 70 : 24, scale: visuel ? 0.96 : 1, duration: visuel ? 1.1 : 0.9, ease: "power3.out",
-          scrollTrigger: visuel ? { trigger: chef, start: "top 92%", toggleActions: "play none none reverse" }
-                                : { trigger: s, start: "top 75%", toggleActions: "play none none reverse" },
-        });
-      } else if (idx === 0) {
-        gsap.from(img, { opacity: 0, y: 40, duration: 1.1, ease: "power3.out", delay: 0.1 + d * 0.4 });
-      } else if (role === "visuel") {
-        gsap.from(img, {
-          opacity: 0, y: 70, scale: 0.96, duration: 1.1, ease: "power3.out",
-          scrollTrigger: { trigger: el, start: "top 92%", toggleActions: "play none none reverse" },
-        });
-      } else if (role === "texte") {
-        gsap.from(img, {
-          opacity: 0, y: 24, duration: 0.9, ease: "power2.out",
-          scrollTrigger: { trigger: s, start: "top 75%", toggleActions: "play none none reverse" },
-        });
-      }
-      // l'étoile tourne avec le défilement
       if (role === "etoile") {
-        gsap.to(img, { rotation: 180, ease: "none", scrollTrigger: { trigger: s, start: "top top", end: "bottom top", scrub: true } });
+        gsap.to(img || el, { rotation: 180, ease: "none", scrollTrigger: { trigger: s, start: "top top", end: "bottom top", scrub: true } });
       }
+      if (!decor) contenus.push(el);
     });
+    if (contenus.length) {
+      const larg = s.offsetWidth || 1;
+      const imgs = contenus.map(el => el.firstElementChild);
+      const delais = contenus.map(el => Math.min(0.3, el.offsetLeft / larg * 0.3));
+      if (idx === 0) gsap.from(imgs, { opacity: 0, y: 30, duration: 1.1, ease: "power3.out", delay: i => 0.1 + delais[i] });
+      else gsap.from(imgs, {
+        opacity: 0, y: 36, duration: 1, ease: "power3.out", delay: i => delais[i],
+        scrollTrigger: { trigger: s, start: "top 80%", toggleActions: "play none none reverse" },
+      });
+    }
   });
   // bouton « Parlons-en » : seulement après la présentation (la couverture reste pure)
   const contact = document.querySelector(".contact");
@@ -365,13 +389,118 @@
       onLeaveBack: () => contact.classList.remove("is-visible"),
     });
   }
-  const finale = document.querySelector("#parlons");
+  const finale = document.querySelector("#fin");
   if (contact && finale) {
     ScrollTrigger.create({
       trigger: finale, start: "top 70%",
-      onEnter: () => contact.classList.add("is-cache"),
-      onLeaveBack: () => contact.classList.remove("is-cache"),
+      onEnter: () => { contact.classList.add("is-cache"); document.documentElement.classList.add("sur-fin"); },
+      onLeaveBack: () => { contact.classList.remove("is-cache"); document.documentElement.classList.remove("sur-fin"); },
     });
   }
   window.addEventListener("load", () => ScrollTrigger.refresh());
+
+  // ---------- formulaire de contact (remplace l'ouverture de l'app Mail) ----------
+  // Envoi par Web3Forms (clé publique, faite pour être dans la page). Sans clé : brouillon de mail.
+  const CLE_FORMULAIRE = "";
+  function ouvrirFormulaire() {
+    window.__suivi("formulaire");
+    const box = document.createElement("div");
+    box.className = "pop pop--form";
+    box.setAttribute("role", "dialog"); box.setAttribute("aria-modal", "true"); box.setAttribute("aria-label", "Écrire à Adrien");
+    box.innerHTML = `<form class="form" novalidate>
+        <button class="form__fermer" type="button" aria-label="Fermer">✕</button>
+        <p class="form__question">Un projet en tête ?</p>
+        <p class="form__titre">Parlons-en.</p>
+        <div class="form__ligne">
+          <label class="form__champ"><span>Nom</span><input name="name" autocomplete="name" required></label>
+          <label class="form__champ"><span>E-mail</span><input name="email" type="email" autocomplete="email" required></label>
+        </div>
+        <label class="form__champ"><span>Sujet</span><input name="subject" required></label>
+        <label class="form__champ"><span>Description</span><textarea name="message" rows="5" required></textarea></label>
+        <input type="checkbox" name="botcheck" class="form__piege" tabindex="-1" autocomplete="off">
+        <div class="form__bas">
+          <p class="form__etat" aria-live="polite"></p>
+          <button class="form__envoyer" type="submit"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#etoile"/></svg>Envoyer</button>
+        </div>
+      </form>`;
+    const form = box.querySelector("form"), etat = box.querySelector(".form__etat");
+    const fermer = () => {
+      box.classList.remove("is-ouvert"); setTimeout(() => box.remove(), 300);
+      document.removeEventListener("keydown", esc);
+      if (window.__lenis) window.__lenis.start();
+      document.documentElement.classList.remove("pop-ouvert");
+    };
+    const esc = e => { if (e.key === "Escape") fermer(); };
+    box.addEventListener("mousedown", e => { if (e.target === box) fermer(); });
+    box.querySelector(".form__fermer").addEventListener("click", fermer);
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      const champs = [...form.querySelectorAll("[required]")];
+      const vide = champs.find(c => !c.value.trim() || (c.type === "email" && !c.checkValidity()));
+      champs.forEach(c => c.closest(".form__champ").classList.toggle("is-erreur", !c.value.trim() || (c.type === "email" && !c.checkValidity())));
+      if (vide) {
+        const nom = { name: "votre nom", email: "un e-mail valide", subject: "le sujet", message: "la description" }[vide.name];
+        etat.textContent = `Il manque ${nom}.`; vide.focus(); return;
+      }
+      const d = Object.fromEntries(new FormData(form));
+      if (!CLE_FORMULAIRE) {
+        location.href = `mailto:pztcontactpro@gmail.com?subject=${encodeURIComponent(d.subject)}&body=${encodeURIComponent(d.message + "\n\n" + d.name + " · " + d.email)}`;
+        return;
+      }
+      form.classList.add("is-envoi"); etat.textContent = "Envoi…";
+      try {
+        const r = await fetch("https://api.web3forms.com/submit", { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" },
+          body: JSON.stringify({ ...d, subject: "Portfolio · " + d.subject, from_name: d.name, access_key: CLE_FORMULAIRE }) });
+        const j = await r.json();
+        if (!j.success) throw new Error(j.message);
+        form.classList.add("is-envoye");
+        window.__suivi("message");
+        form.innerHTML = `<button class="form__fermer" type="button" aria-label="Fermer">✕</button>
+          <svg class="form__etoile" viewBox="0 0 100 100" aria-hidden="true"><use href="#etoile"/></svg>
+          <p class="form__question">Message envoyé.</p><p class="form__titre">Merci !</p>
+          <p class="form__merci">Je reviens vers vous très vite.</p>`;
+        form.querySelector(".form__fermer").addEventListener("click", fermer);
+      } catch {
+        form.classList.remove("is-envoi");
+        etat.innerHTML = 'Oups, l’envoi a échoué. Écrivez-moi à <a href="mailto:pztcontactpro@gmail.com" data-direct>pztcontactpro@gmail.com</a>';
+      }
+    });
+    document.addEventListener("keydown", esc);
+    document.body.appendChild(box);
+    if (window.__lenis) window.__lenis.stop();
+    document.documentElement.classList.add("pop-ouvert");
+    requestAnimationFrame(() => box.classList.add("is-ouvert"));
+    setTimeout(() => box.querySelector("input").focus({ preventScroll: true }), 350);
+  }
+  // ---------- suivi des liens prospects (pztdesign.vercel.app/101, /102…) ----------
+  // Envoie à Creative Space : ouverture (après 5 s, pour ignorer les robots des messageries),
+  // jusqu'où la personne est allée, vidéos et formulaire. Aucun cookie. Vide = désactivé.
+  const SUIVI = "";
+  const codeProspect = (location.pathname.match(/^\/(\d{3,5})$/) || [])[1];
+  const NOMS = { couverture: "Couverture", presentation: "Présentation", socialads: "Social Ads", xtb: "XTB", hellobank: "Hello bank!",
+    etatpur: "État pur", teenage: "Teenage Engineering", jardinpur: "Jardin Pur", poppins: "Poppins", performa: "Marianne Éducation",
+    medibox: "Medibox", modeles: "Posts organiques", videos: "Vidéos", stories: "Stories", projets: "Projets More+", psg: "PSG",
+    affiches: "Affiches", lehavre: "Le Havre", angles_1: "4ngles", fragment: "fragment 02", motion: "Motion", cyberpunk: "Cyberpunk",
+    trinity_cd: "Trinity", instagram: "Instagram", fin: "Fin (contact)" };
+  window.__suivi = () => {};
+  if (SUIVI && codeProspect && !navigator.webdriver && !/[?&]test\b/.test(location.search)) {
+    const debut = Date.now();
+    let plusLoin = "", rang = -1, ouvert = false;
+    window.__suivi = (evenement, valeur) => {
+      try { navigator.sendBeacon(SUIVI, JSON.stringify({ code: codeProspect, evenement, valeur, secondes: Math.round((Date.now() - debut) / 1000) })); } catch {}
+    };
+    setTimeout(() => { if (document.visibilityState === "visible") { ouvert = true; window.__suivi("ouverture"); } }, 5000);
+    document.querySelectorAll("#page > .slide").forEach((sl, i) => ScrollTrigger.create({
+      trigger: sl, start: "top 60%", onEnter: () => { if (i > rang) { rang = i; plusLoin = NOMS[sl.id] || sl.id; } },
+    }));
+    document.addEventListener("visibilitychange", () => { if (ouvert && document.visibilityState === "hidden") window.__suivi("depart", plusLoin); });
+  }
+
+  // tous les liens mail du site et le bouton « Parlons-en » ouvrent le formulaire
+  document.addEventListener("click", e => {
+    const a = e.target.closest('a[href^="mailto:"]');
+    if (!a || a.hasAttribute("data-direct")) return;
+    e.preventDefault();
+    ouvrirFormulaire();
+  });
 })();
