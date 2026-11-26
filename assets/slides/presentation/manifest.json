@@ -7,14 +7,16 @@
    "id": "photo",
    "src": "photo.webp",
    "x": 0,
-   "y": 596,
+   "y": 534,
    "w": 1499,
    "h": 1563,
    "depth": 0.3,
    "blend": "normal",
    "role": "visuel",
    "fx": [],
-   "suit": null
+   "suit": null,
+   "retouche": "transparent",
+   "recale": true
   }
  ]
 }

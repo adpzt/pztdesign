@@ -502,7 +502,64 @@
    "blend": "normal",
    "role": "texte",
    "fx": [],
-   "suit": null
+   "suit": null,
+   "retouche": "transparent"
+  }
+ ],
+ "carrousels": [
+  {
+   "carte": "card01",
+   "x": 176.0,
+   "y": 787.0,
+   "w": 958.0,
+   "h": 1200.0,
+   "depth": 0.4,
+   "slides": [
+    "carr1_01.webp",
+    "carr1_02.webp",
+    "carr1_03.webp",
+    "carr1_04.webp",
+    "carr1_05.webp",
+    "carr1_06.webp"
+   ],
+   "largeur": 1100
+  },
+  {
+   "carte": "card02",
+   "x": 1374.0,
+   "y": 621.0,
+   "w": 1090.0,
+   "h": 1366.0,
+   "depth": 0.6,
+   "slides": [
+    "carr2_01.webp",
+    "carr2_02.webp",
+    "carr2_03.webp",
+    "carr2_04.webp",
+    "carr2_05.webp",
+    "carr2_06.webp"
+   ],
+   "largeur": 1100
+  },
+  {
+   "carte": "card03",
+   "x": 2719.0,
+   "y": 824.0,
+   "w": 928.0,
+   "h": 1163.0,
+   "depth": 0.35,
+   "slides": [
+    "carr3_01.webp",
+    "carr3_02.webp",
+    "carr3_03.webp",
+    "carr3_04.webp",
+    "carr3_05.webp",
+    "carr3_06.webp",
+    "carr3_07.webp",
+    "carr3_08.webp",
+    "carr3_09.webp"
+   ],
+   "largeur": 1100
   }
  ]
 }

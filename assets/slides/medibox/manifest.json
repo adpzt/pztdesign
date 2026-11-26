@@ -1,13 +1,13 @@
 {
  "id": "medibox",
  "w": 3840,
- "h": 2160,
+ "h": 1960,
  "planes": [
   {
    "id": "fond",
    "src": "fond.webp",
    "x": -106,
-   "y": 497,
+   "y": 297,
    "w": 3951,
    "h": 1663,
    "depth": -0.2,
@@ -20,7 +20,7 @@
    "id": "grand",
    "src": "grand.webp",
    "x": 164,
-   "y": 437,
+   "y": 237,
    "w": 1290,
    "h": 1613,
    "depth": 0.3,
@@ -33,20 +33,21 @@
    "id": "col2",
    "src": "col2.webp",
    "x": 1519,
-   "y": 444,
+   "y": 244,
    "w": 574,
-   "h": 1601,
+   "h": 1607,
    "depth": 0.5,
    "blend": "normal",
    "role": "visuel",
    "fx": [],
-   "suit": null
+   "suit": null,
+   "retouche": "sources HD"
   },
   {
    "id": "col3",
    "src": "col3.webp",
    "x": 2119,
-   "y": 445,
+   "y": 245,
    "w": 568,
    "h": 1600,
    "depth": 0.38,
@@ -59,7 +60,7 @@
    "id": "col4",
    "src": "col4.webp",
    "x": 2716,
-   "y": 445,
+   "y": 245,
    "w": 568,
    "h": 1600,
    "depth": 0.6,
@@ -72,7 +73,7 @@
    "id": "col5",
    "src": "col5.webp",
    "x": 3318,
-   "y": 446,
+   "y": 246,
    "w": 324,
    "h": 1599,
    "depth": 0.45,
@@ -87,7 +88,7 @@
    "id": "t_pass",
    "txt": "Campagne PASS/LAS",
    "x": 174,
-   "base": 410.2,
+   "base": 210.2,
    "size": 39.5,
    "weight": 500
   },
@@ -95,9 +96,10 @@
    "id": "t_webinaire",
    "txt": "Webinaire",
    "x": 2718,
-   "base": 410.2,
+   "base": 210.2,
    "size": 39.5,
    "weight": 500
   }
- ]
+ ],
+ "rogne_haut": 200
 }

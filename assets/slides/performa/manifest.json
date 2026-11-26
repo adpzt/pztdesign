@@ -58,7 +58,8 @@
      "layer": "Portrait 2"
     }
    ],
-   "suit": null
+   "suit": null,
+   "retouche": "visuel 1 depuis la source"
   },
   {
    "id": "logos",
@@ -91,6 +92,29 @@
      258,
      84
     ]
+   ],
+   "parts": [
+    {
+     "src": "logos__z0.webp",
+     "x": 150,
+     "y": 170,
+     "w": 325,
+     "h": 151
+    },
+    {
+     "src": "logos__z1.webp",
+     "x": 529,
+     "y": 174,
+     "w": 88,
+     "h": 147
+    },
+    {
+     "src": "logos__z2.webp",
+     "x": 679,
+     "y": 201,
+     "w": 258,
+     "h": 84
+    }
    ]
   },
   {

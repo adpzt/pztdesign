@@ -334,3 +334,38 @@ html.sur-fin .astuce { opacity: 0 !important; }
 }
 .intro-etoile svg { display: block; width: 100%; height: 100%; fill: var(--pzt); }
 html.en-intro .contact, html.en-intro .astuce { opacity: 0 !important; }
+
+/* ---------- 26/11 : écart aéré entre les slides ; bulle « E-mail copié » ---------- */
+.slide + .slide { margin-top: calc(var(--largeur-slide) * 0.05); }
+.copie {
+  position: fixed; z-index: 120; translate: 0 -50%;
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 14px 9px 11px; border-radius: 999px;
+  background: var(--noir); color: var(--blanc);
+  font: 600 14px/1 "Inter Tight", sans-serif; letter-spacing: -0.01em; white-space: nowrap;
+  opacity: 0; transform: translateX(-8px) scale(.96);
+  transition: opacity .3s ease, transform .45s cubic-bezier(.2,.8,.2,1);
+  pointer-events: none;
+}
+.copie.is-visible { opacity: 1; transform: none; }
+.copie svg { width: 14px; height: 14px; fill: var(--blanc); animation: copie-tourne .6s cubic-bezier(.2,.8,.2,1); }
+@keyframes copie-tourne { from { transform: rotate(-90deg) scale(.4); } to { transform: none; } }
+.fin__mail, .pres__mail { cursor: copy; }
+
+/* ---------- carrousels XTB : les vraies slides défilent dans une fenêtre 4:5 ---------- */
+.carrousel__fenetre {
+  position: relative; width: 100%; aspect-ratio: 4320 / 5412; overflow: hidden;
+  /* liseré blanc et lueur grise des cartes du PSD */
+  box-shadow: 0 0 0 calc(10 / 3840 * 100cqw) #fff, 0 0 calc(101 / 3840 * 100cqw) rgba(210, 210, 210, .86);
+}
+.carrousel__piste { display: flex; height: 100%; will-change: transform; }
+.carrousel__piste img { flex: 0 0 100%; width: 100%; height: 100%; object-fit: cover; display: block; }
+.carrousel__points {
+  position: absolute; left: 0; right: 0; top: calc(100% + 48 / 3840 * 100cqw);
+  display: flex; justify-content: center; gap: calc(16 / 3840 * 100cqw);
+}
+.carrousel__points span { width: calc(17 / 3840 * 100cqw); aspect-ratio: 1; border-radius: 50%; background: #cfcfcf; transition: background .3s ease, transform .3s ease; }
+.carrousel__points span.is-actif { background: var(--pzt); transform: scale(1.25); }
+
+/* un peu plus d'air après les carrousels XTB (la slide reste fixe un moment) */
+#xtb { margin-bottom: calc(var(--largeur-slide) * 0.03); }

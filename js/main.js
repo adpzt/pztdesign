@@ -8,22 +8,13 @@
   const pct = (v, total) => (v / total * 100) + "%";
 
   // ---------- vidéos en boucle ----------
-  // Lecture seulement à l'écran. Pendant que l'on défile, elles se mettent en pause : une vidéo qui tourne
-  // fait tomber Chrome / Safari à 30 images par seconde ; elles repartent dès que le défilement s'arrête.
-  const videosVues = new Set();
-  let enDefilement = false, minuterieDefile = 0;
+  // Lecture seulement à l'écran. Les boucles sont encodées à 60 images/s : une vidéo à 25-30 images/s
+  // fait caler Chrome et Safari sur sa cadence pendant le défilement (mesuré : 211 images lentes contre 2).
   function suivreVideo(v, bloc) {
     new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) { videosVues.add(v); if (!enDefilement) v.play().catch(() => {}); }
-      else { videosVues.delete(v); v.pause(); }
+      if (e.isIntersecting) v.play().catch(() => {}); else v.pause();
     }, { rootMargin: "200px 0px" }).observe(bloc);
   }
-  function signalerDefilement() {
-    if (!enDefilement) { enDefilement = true; videosVues.forEach(v => v.pause()); }
-    clearTimeout(minuterieDefile);
-    minuterieDefile = setTimeout(() => { enDefilement = false; videosVues.forEach(v => v.play().catch(() => {})); }, 160);
-  }
-  window.addEventListener("scroll", signalerDefilement, { passive: true });
 
   // ---------- construction ----------
   // les calques se chargent deux écrans avant d'arriver à l'écran
@@ -44,6 +35,7 @@
   }
   function plan(p, m, dossier) {
     const el = document.createElement("div");
+    el._boite = [p.x, p.y, p.w, p.h];
     el.className = "plan" + (p.blend === "multiply" ? " plan--multiply" : "");
     el.dataset.depth = p.depth || 0;
     el.dataset.role = p.role || "visuel";
@@ -84,9 +76,7 @@
     s.querySelectorAll(":scope > .plan").forEach(el => {
       const role = el.dataset.role;
       if (role === "fond" || role === "etoile") return;
-      const p = m.planes.find(q => q.id === el.dataset.id);
-      if (role === "visuel" && p) noeuds.push({ el, type: "v", b: boite(p.x, p.y, p.w, p.h), d: +el.dataset.depth || 0 });
-      else if (role === "texte" && p) (p.zones || [[p.x, p.y, p.w, p.h]]).forEach(z => noeuds.push({ el, type: "z", b: boite(...z), p }));
+      if (el._boite) noeuds.push({ el, type: role === "visuel" ? "v" : "z", b: boite(...el._boite), d: +el.dataset.depth || 0 });
       else if (role === "texte") {
         const t = (m.textes || []).find(t => t.id === el.dataset.id);
         if (t) noeuds.push({ el, type: "z", b: boite(t.x, t.base - t.size, t.txt.length * t.size * 0.55, t.size * 1.25) });
@@ -113,31 +103,32 @@
       liste.forEach(n => { n.g = g; n.prof = prof; });
       g++;
     });
-    noeuds.filter(n => n.type === "v").forEach(n => { n.el.dataset.groupe = n.g; n.el.dataset.prof = n.prof.toFixed(3); });
-    // un calque de texte dont les zones vont dans des groupes différents est dupliqué :
-    // chaque copie ne montre que ses zones (découpe) et suit son groupe
-    const pc = (v, t) => `${(Math.max(0, v) / t * 100).toFixed(3)}%`;
-    const parCalque = new Map();
-    noeuds.filter(n => n.type === "z").forEach(n => { if (!parCalque.has(n.el)) parCalque.set(n.el, []); parCalque.get(n.el).push(n); });
-    parCalque.forEach((zs, el) => {
-      const gs = [...new Set(zs.map(z => z.g))];
-      if (gs.length === 1 || !zs[0].p) { el.dataset.groupe = zs[0].g; el.dataset.prof = zs[0].prof.toFixed(3); return; }
-      const p = zs[0].p;
-      gs.forEach(gr => {
-        const mes = zs.filter(z => z.g === gr), M = 10;
-        const x0 = Math.min(...mes.map(z => z.b.x0)) - M, y0 = Math.min(...mes.map(z => z.b.y0)) - M;
-        const x1 = Math.max(...mes.map(z => z.b.x1)) + M, y1 = Math.max(...mes.map(z => z.b.y1)) + M;
-        const c = el.cloneNode(true);
-        c.style.clipPath = `inset(${pc(y0 - p.y, p.h)} ${pc(p.x + p.w - x1, p.w)} ${pc(p.y + p.h - y1, p.h)} ${pc(x0 - p.x, p.w)})`;
-        c.dataset.groupe = gr; c.dataset.prof = mes[0].prof.toFixed(3);
-        const img = c.querySelector("img");
-        if (img) prechargeur.observe(img);
-        el.before(c);
-      });
-      const img = el.querySelector("img");
-      if (img) prechargeur.unobserve(img);
-      el.remove();
+    noeuds.forEach(n => { n.el.dataset.groupe = n.g; n.el.dataset.prof = n.prof.toFixed(3); });
+  }
+
+  // carrousel : les vraies slides côte à côte dans une fenêtre 4:5, qui défilent avec la page (slide XTB)
+  function carrousel(c, m, dossier) {
+    const el = document.createElement("div");
+    el.className = "plan carrousel";
+    el._boite = [c.x, c.y, c.w, c.h];
+    el.dataset.role = "visuel"; el.dataset.depth = c.depth; el.dataset.id = c.carte;
+    el.style.left = pct(c.x, m.w); el.style.top = pct(c.y, m.h); el.style.width = pct(c.w, m.w);
+    el.innerHTML = '<div class="carrousel__fenetre"><div class="carrousel__piste"></div></div><div class="carrousel__points" aria-hidden="true"></div>';
+    const piste = el.querySelector(".carrousel__piste"), points = el.querySelector(".carrousel__points");
+    c.slides.forEach((src, i) => {
+      const img = new Image();
+      img.alt = i ? "" : "Carrousel XTB";
+      img.width = c.largeur; img.height = Math.round(c.largeur * 5412 / 4320);
+      img.decoding = "async";
+      img.dataset.src = `assets/slides/${dossier}/${src}`;
+      leger(img, img.dataset.src, c.largeur, c.w / m.w);
+      prechargeur.observe(img);
+      piste.appendChild(img);
+      points.appendChild(document.createElement("span"));
     });
+    el._piste = piste; el._points = [...points.children]; el._n = c.slides.length;
+    el._points[0].classList.add("is-actif");
+    return el;
   }
 
   function slidePlans(b) {
@@ -146,7 +137,15 @@
     s.className = "slide";
     s.id = b.id;
     s.style.aspectRatio = `${m.w} / ${m.h}`;
-    m.planes.forEach(p => s.appendChild(plan(p, m, b.id)));
+    // un calque de texte découpé en blocs (zones.py) donne un plan par bloc : chaque légende peut suivre son visuel
+    const cartes = new Set((m.carrousels || []).map(c => c.carte));
+    m.planes.forEach(p => {
+      if (cartes.has(p.id)) return; // remplacée par son carrousel
+      if (p.parts) p.parts.forEach((q, i) => s.appendChild(plan({ ...p, ...q, id: `${p.id}__${i}` }, m, b.id)));
+      else s.appendChild(plan(p, m, b.id));
+    });
+    (m.carrousels || []).forEach(c => s.appendChild(carrousel(c, m, b.id)));
+    if (m.carrousels) s._carrousels = [...s.querySelectorAll(".carrousel")];
     // textes vivants (police du site), position = ligne de base dans le repère du canevas
     (m.textes || []).forEach(t => {
       const el = document.createElement("div");
@@ -183,14 +182,15 @@
       s.appendChild(el);
       return el;
     };
-    t("pres__nom pres__nom--prenom", 1132, 1297.2, "ADRIEN");
-    t("pres__nom pres__nom--famille", 972.1, 1431.1, "POIZAT");
+    t("pres__nom pres__nom--prenom", 1132, 1107.2, "ADRIEN");
+    t("pres__nom pres__nom--famille", 972.1, 1241.1, "POIZAT");
     const mail = t("pres__mail", 1405.1, 1857.3, "pztcontactpro@gmail.com", "a");
     mail.href = "mailto:pztcontactpro@gmail.com";
+    mail.dataset.copier = "";
     t("pres__desc", 1404.9, 1988.9,
       "Graphiste &amp; DA freelance, je conçois des identités visuelles, des campagnes publicitaires<br>et des contenus créatifs pour des marques qui veulent se démarquer.");
 
-    const roles = ["Motion Design", "Graphic Design", "Art Director"];
+    const roles = ["Art Director", "Graphic Design", "Motion Design", "Branding"];
     const box = document.createElement("div");
     box.className = "roles";
     const ul = document.createElement("ul");
@@ -315,7 +315,7 @@
         <p class="fin__titre">Parlons-en.</p>
         <div class="fin__actions">
           <a class="fin__bouton" href="mailto:pztcontactpro@gmail.com"><svg viewBox="0 0 100 100" aria-hidden="true"><use href="#etoile"/></svg>Écrire à Adrien</a>
-          <a class="fin__mail" href="mailto:pztcontactpro@gmail.com">pztcontactpro@gmail.com</a>
+          <a class="fin__mail" href="mailto:pztcontactpro@gmail.com" data-copier title="Copier l’adresse">pztcontactpro@gmail.com</a>
         </div>
       </div></div>
       <p class="plan fin__pied" data-role="texte"><span>pztdesign · Graphiste &amp; DA freelance<span class="fin__lieu"><span class="fin__sep"> · </span>Paris, France</span></span></p>`;
@@ -335,9 +335,10 @@
 
   // ---------- animation des rôles (reprend le GIF de Behance) ----------
   function animerRoles(s) {
+    // ordre voulu par Adrien : Art Director (à l'arrivée), puis Graphic Design, Motion Design, Branding, en boucle
     const { ul, puce, n } = s._roles;
     const items = [...ul.children];
-    let i = n + 1; // « Graphic Design » au centre, comme sur la slide
+    let i = 0, minuterie = 0; // premier tour : rien au-dessus d'Art Director
     const pas = () => items[0].getBoundingClientRect().height;
     const placer = (k, anim) => {
       const y = -(k - 1) * pas();
@@ -351,8 +352,9 @@
       else gsap.set(ul, { y });
     };
     placer(i, false);
+    window.addEventListener("resize", () => placer(i, false));
     if (reduit) return;
-    setInterval(() => {
+    const suivant = () => {
       i += 1;
       // la puce se replie en losange pendant le changement, comme sur le GIF de Behance
       gsap.timeline()
@@ -360,9 +362,13 @@
         .to(puce, { scale: 1, rotation: 90, duration: 0.3, ease: "power2.out" })
         .set(puce, { rotation: 0 });
       placer(i, true);
-      if (i >= n * 2 + 1) { setTimeout(() => { i = n + 1; placer(i, false); }, 600); }
-    }, 2100);
-    window.addEventListener("resize", () => placer(i, false));
+      if (i >= n * 2) setTimeout(() => { i = n; placer(i, false); }, 600); // même mot : boucle invisible
+    };
+    // repart d'Art Director à chaque arrivée sur la slide
+    new IntersectionObserver(([e]) => {
+      clearInterval(minuterie);
+      if (e.isIntersecting) { i = 0; placer(i, false); minuterie = setInterval(suivant, 2100); }
+    }, { threshold: 0.35 }).observe(s);
   }
 
   // ---------- téléphone : un tap sur une slide l'ouvre en grand, déplaçable au doigt ----------
@@ -433,10 +439,37 @@
     if (vid) {
       gsap.from(vid, { opacity: 0, scale: 0.97, duration: 1.1, ease: "power3.out",
         scrollTrigger: { trigger: s, start: "top 85%", toggleActions: "play none none reverse" } });
-      gsap.fromTo(vid, { y: () => 0.04 * s.offsetHeight }, { y: () => -0.04 * s.offsetHeight, ease: "none",
-        scrollTrigger: { trigger: s, start: "top bottom", end: "bottom top", scrub: true, invalidateOnRefresh: true } });
     }
     const H = () => s.getBoundingClientRect().height;
+    if (s._carrousels) {
+      const PAS_XTB = Math.max(...s._carrousels.map(c => c._n)) - 1;
+      let epingle = null; // la slide XTB fixée (renseignée par ScrollTrigger)
+      const cs = s._carrousels, lis = (a, b, v) => { const t = Math.min(1, Math.max(0, (v - a) / (b - a))); return t * t * (3 - 2 * t); };
+      ScrollTrigger.create({
+        trigger: s, start: "center center", end: () => "+=" + Math.round(innerHeight * 0.34 * PAS_XTB), pin: true, scrub: true,
+        onUpdate: self => cs.forEach((c, i) => {
+          // une marche par slide pour tous (le plus long carrousel en a 8) ; arrêt sur 60 % de chaque marche
+          const p = Math.min(c._n - 1, Math.max(0, self.progress * PAS_XTB - i * 0.06));
+          const n = Math.min(c._n - 1, Math.floor(p)), f = p - n;
+          const k = Math.min(c._n - 1, n + lis(0.2, 0.6, f));
+          c._piste.style.transform = `translate3d(${(-k * 100).toFixed(3)}%,0,0)`;
+          const actif = Math.round(k);
+          c._points.forEach((pt, j) => pt.classList.toggle("is-actif", j === actif));
+        }),
+        onToggle: self => { epingle = self; },
+      });
+      // aimant : quand on lâche le défilement pendant les carrousels, on se cale sur la slide la plus proche
+      let attente = 0;
+      window.addEventListener("scroll", () => {
+        clearTimeout(attente);
+        attente = setTimeout(() => {
+          if (!epingle || !epingle.isActive || !window.__lenis) return;
+          const cible = Math.round(epingle.progress * PAS_XTB) / PAS_XTB;
+          if (Math.abs(cible - epingle.progress) * PAS_XTB < 0.04) return;
+          window.__lenis.scrollTo(epingle.start + cible * (epingle.end - epingle.start), { duration: 0.6 });
+        }, 160);
+      }, { passive: true });
+    }
 
     // Parallaxe : les décors (formes de fond, étoiles) glissent le plus ; les visuels glissent par groupes
     // (une légende avec son visuel, des visuels qui se touchent ensemble) ; les textes seuls restent fixes.
@@ -448,15 +481,21 @@
       const role = el.dataset.role;
       const decor = role === "fond" || role === "etoile";
       const img = el.firstElementChild;
-      const prof = decor ? d * 2 : parseFloat(el.dataset.prof || "0");
+      const prof = s._carrousels ? 0 : decor ? d * 1.5 : parseFloat(el.dataset.prof || "0");
       if (prof) {
         el.classList.add("plan--bouge");
         el.style.setProperty("--md", (Math.abs(prof) * (decor ? 30 : 24)).toFixed(1));
-        const amp = () => (mobile.matches ? 0.1 : 0.24) * prof * H();
-        gsap.fromTo(el, { y: () => amp() }, {
-          y: () => -amp(), ease: "none",
-          scrollTrigger: { trigger: s, start: "top bottom", end: "bottom top", scrub: true, invalidateOnRefresh: true },
-        });
+        const amp = () => (mobile.matches ? 0.12 : decor ? 0.26 : 0.34) * prof * H();
+        if (s.id === "presentation") {
+          // la photo (et le nom posé dessus) arrive un peu plus bas puis se cale sur le texte, et y reste
+          gsap.fromTo(el, { y: () => amp() }, { y: 0, ease: "none",
+            scrollTrigger: { trigger: s, start: "top bottom", end: "center center", scrub: true, invalidateOnRefresh: true } });
+        } else {
+          gsap.fromTo(el, { y: () => amp() }, {
+            y: () => -amp(), ease: "none",
+            scrollTrigger: { trigger: s, start: "top bottom", end: "bottom top", scrub: true, invalidateOnRefresh: true },
+          });
+        }
       }
       const incl = (INCLINAISON[s.id] || []).includes(el.dataset.id);
       if (incl && !mobile.matches) {
@@ -471,14 +510,25 @@
       if (!decor) contenus.push(el);
     });
     if (contenus.length && idx > 0) {
+      // chaque groupe (visuel + sa légende) arrive quand il entre à l'écran, d'autant plus bas qu'il est en avant ;
+      // les textes seuls arrivent avec la slide
       const larg = s.offsetWidth || 1;
-      const avecImg = contenus.filter(el => el.firstElementChild);
-      const imgs = avecImg.map(el => el.firstElementChild);
-      const delais = avecImg.map(el => Math.min(0.35, el.offsetLeft / larg * 0.35));
-      const profs = avecImg.map(el => parseFloat(el.dataset.prof || "0"));
-      gsap.from(imgs, {
-        opacity: 0, y: i => 30 + profs[i] * 110, scale: i => (profs[i] > 0.2 ? 0.965 : 1), duration: 1.15, ease: "power3.out", delay: i => delais[i],
-        scrollTrigger: { trigger: s, start: "top 80%", toggleActions: "play none none reverse" },
+      const parGroupe = new Map();
+      contenus.filter(el => el.firstElementChild).forEach(el => {
+        const g = el.dataset.groupe ?? el.dataset.id;
+        if (!parGroupe.has(g)) parGroupe.set(g, []);
+        parGroupe.get(g).push(el);
+      });
+      parGroupe.forEach(els => {
+        const prof = parseFloat(els[0].dataset.prof || "0");
+        const imgs = els.map(el => el.firstElementChild);
+        const declencheur = prof ? els.reduce((a, el) => (el.offsetTop < a.offsetTop ? el : a)) : s;
+        gsap.from(imgs, {
+          opacity: 0, y: prof ? 60 + prof * 130 : 26, scale: prof > 0.2 ? 0.96 : 1,
+          duration: prof ? 1.2 : 0.9, ease: "power3.out",
+          delay: Math.min(0.25, els[0].offsetLeft / larg * 0.25),
+          scrollTrigger: { trigger: declencheur, start: prof ? "top 94%" : "top 78%", toggleActions: "play none none reverse" },
+        });
       });
     }
     // seules les slides proches de l'écran gardent leurs calques prêts à bouger (fluidité)
@@ -661,11 +711,29 @@
     document.addEventListener("visibilitychange", () => { if (ouvert && document.visibilityState === "hidden") window.__suivi("depart", plusLoin); });
   }
 
-  // tous les liens mail du site et le bouton « Parlons-en » ouvrent le formulaire
+  // l'adresse affichée se copie d'un clic (bulle « E-mail copié ») ; les boutons ouvrent le formulaire
+  function copierMail(a) {
+    const mail = "pztcontactpro@gmail.com";
+    const fait = () => {
+      const r = a.getBoundingClientRect();
+      const bulle = document.createElement("div");
+      bulle.className = "copie";
+      bulle.innerHTML = '<svg viewBox="0 0 100 100" aria-hidden="true"><use href="#etoile"/></svg>E-mail copié';
+      bulle.setAttribute("role", "status");
+      bulle.style.left = `${r.right + 14}px`;
+      bulle.style.top = `${r.top + r.height / 2}px`;
+      document.body.appendChild(bulle);
+      requestAnimationFrame(() => bulle.classList.add("is-visible"));
+      setTimeout(() => { bulle.classList.remove("is-visible"); setTimeout(() => bulle.remove(), 400); }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(mail).then(fait, () => ouvrirFormulaire());
+    else ouvrirFormulaire();
+  }
   document.addEventListener("click", e => {
     const a = e.target.closest('a[href^="mailto:"]');
     if (!a || a.hasAttribute("data-direct")) return;
     e.preventDefault();
-    ouvrirFormulaire();
+    if (a.hasAttribute("data-copier")) copierMail(a);
+    else ouvrirFormulaire();
   });
 })();

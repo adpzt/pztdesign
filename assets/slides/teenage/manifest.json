@@ -135,15 +135,16 @@
   {
    "id": "logo",
    "src": "logo.webp",
-   "x": 112,
-   "y": 118,
-   "w": 883,
-   "h": 231,
+   "x": 94,
+   "y": 100,
+   "w": 919,
+   "h": 267,
    "depth": 0.1,
    "blend": "normal",
    "role": "texte",
    "fx": [],
-   "suit": null
+   "suit": null,
+   "retouche": "transparent"
   },
   {
    "id": "legende",
